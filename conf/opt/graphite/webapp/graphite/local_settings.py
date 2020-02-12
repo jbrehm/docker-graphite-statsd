@@ -306,7 +306,7 @@ REMOTE_RETRY_DELAY = float(os.environ.get('GRAPHITE_REMOTE_RETRY_DELAY', '0'))  
 #STORE_FAIL_ON_ERROR = False
 
 # Try to detect when a cluster server is localhost and don't forward queries
-REMOTE_EXCLUDE_LOCAL = False
+REMOTE_EXCLUDE_LOCAL = True
 
 # Number of retries for a specific remote data fetch.
 MAX_FETCH_RETRIES = int(os.environ.get('GRAPHITE_MAX_FETCH_RETRIES', '2'))
