@@ -1,4 +1,4 @@
-FROM alpine:3.10.3 as base
+FROM alpine:3.11.5 as base
 LABEL maintainer="Denys Zhdanov <denis.zhdanov@gmail.com>"
 
 RUN true \
@@ -20,7 +20,7 @@ RUN true \
       sqlite \
       expect \
       dcron \
-      py-mysqldb \
+      py3-mysqlclient \
       mysql-dev \
       mysql-client \
       postgresql-dev \
@@ -42,10 +42,7 @@ RUN true \
       pkgconfig \
       py3-cairo \
       py3-pip \
-      py3-pyldap \
-      py3-virtualenv \
-      py-rrd \
-      py-mysqldb \
+      py3-virtualenv==16.7.8-r0 \
       openldap-dev \
       python3-dev \
       rrdtool-dev \
@@ -53,18 +50,19 @@ RUN true \
  && virtualenv /opt/graphite \
  && . /opt/graphite/bin/activate \
  && pip3 install \
-      django==1.11.25 \
+      django==2.2.12 \
       django-statsd-mozilla \
       fadvise \
-      gunicorn==19.10.0 \
+      gunicorn==20.0.4 \
       msgpack-python \
       redis \
       rrdtool \
       python-ldap \
       mysqlclient \
-      psycopg2
+      psycopg2 \
+      django-cockroachdb==2.2.*
 
-ARG version=1.1.6
+ARG version=1.1.7
 
 # install whisper
 ARG whisper_version=${version}
@@ -93,7 +91,7 @@ RUN . /opt/graphite/bin/activate \
  && python3 ./setup.py install
 
 # install statsd (as we have to use this ugly way)
-ARG statsd_version=0.8.5
+ARG statsd_version=0.8.6
 ARG statsd_repo=https://github.com/statsd/statsd.git
 WORKDIR /opt
 RUN git clone "${statsd_repo}" \
