@@ -1,4 +1,4 @@
-FROM alpine:3.11.5 as base
+FROM alpine:3.12.0 as base
 LABEL maintainer="Denys Zhdanov <denis.zhdanov@gmail.com>"
 
 RUN true \
@@ -29,7 +29,8 @@ RUN true \
       /etc/nginx/conf.d/default.conf \
  && mkdir -p \
       /var/log/carbon \
-      /var/log/graphite
+      /var/log/graphite \
+      /opt/graphite
 
 FROM base as build
 LABEL maintainer="Denys Zhdanov <denis.zhdanov@gmail.com>"
@@ -42,7 +43,7 @@ RUN true \
       pkgconfig \
       py3-cairo \
       py3-pip \
-      py3-virtualenv==16.7.8-r0 \
+      py3-virtualenv \
       openldap-dev \
       python3-dev \
       rrdtool-dev \
@@ -50,7 +51,7 @@ RUN true \
  && virtualenv /opt/graphite \
  && . /opt/graphite/bin/activate \
  && pip3 install \
-      django==2.2.12 \
+      django==2.2.13 \
       django-statsd-mozilla \
       fadvise \
       gunicorn==20.0.4 \
@@ -88,7 +89,7 @@ RUN . /opt/graphite/bin/activate \
  && git clone -b ${graphite_version} --depth 1 ${graphite_repo} /usr/local/src/graphite-web \
  && cd /usr/local/src/graphite-web \
  && pip3 install -r requirements.txt \
- && python3 ./setup.py install
+ && python3 ./setup.py install --prefix=/opt/graphite --install-lib=/opt/graphite/webapp
 
 # install statsd (as we have to use this ugly way)
 ARG statsd_version=0.8.6
